@@ -1,3 +1,5 @@
+USE DA_BD;
+
 -- TP 1
 -- Consultas Simples
   -- a
@@ -67,6 +69,16 @@
   JOIN booking ON room.roomno = booking.roomno
   JOIN hotel ON hotel.hotelno = booking.hotelno
   GROUP BY hotel.hotelno;
+  -- u
+  SELECT MIN(r.price) AS MINIMO, MAX(r.price) AS MAXIMO, h.hotelno
+  FROM ROOM r
+  JOIN HOTEL h ON h.hotelno = r.hotelno
+  WHERE h.hotelname = 'London Park'
+  GROUP BY h.hotelno;
+  -- v
+  SELECT h.hotelname, AVG(r.price), r.type
+  FROM HOTEL h JOIN ROOM r ON h.hotelno = r.hotelno
+  WHERE h.city = 'London'
+  GROUP BY h.hotelname, r.type
+  ORDER BY h.hotelname, r.type; 
 
-
-  
