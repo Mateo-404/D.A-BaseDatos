@@ -101,3 +101,92 @@ USE DABD_TP2;
 	-- k
 	ALTER VIEW Ultimas10Noticias DROP COLUMN UsrCarga;
 	ALTER VIEW Ultimas10Noticias ADD NomSeccion VARCHAR(25);
+	-- l
+	CREATE VIEW CantidadNoticiasPorUsr AS
+	SELECT n.UsrCarga, COUNT(n.NroNoticia) AS CantidadNoticias
+	FROM NOTICIAS n
+	GROUP BY n.UsrCarga;
+	-- m
+	DROP VIEW CantidadNoticiasPorUsr;
+
+--- 3
+	--- b
+	CREATE TABLE ALUMNOS (
+		LegajoAlum int PRIMARY KEY,
+		NomAlum varchar(50) NOT NULL,
+		ApellidoAlum varchar(50) NOT NULL,
+		F_Nacimiento date,
+		Localidad varchar(100),
+		TE varchar(11),
+		Estado varchar(8) CHECK (Estado IN ('Activo', 'Egresado', 'Desertor'))
+	);
+
+	--- CREATE DOMAIN DomEstado CHECK(VALUE IN ('Activo', 'Egresado', 'Desertor'));
+	-- c
+	CREATE TABLE MATERIAS(
+		NroMateria INT PRIMARY KEY,
+		NomMateria VARCHAR(90) not null,
+		NomCarrera VARCHAR(100)
+	);
+	-- d
+	CREATE TABLE PROFESORES(
+		LegajoProf INT PRIMARY KEY,
+		NomProf VARCHAR(50) not null,
+		ApellidoProf VARCHAR(50) not null,
+		Domicilio VARCHAR(50),
+		Localidad VARCHAR(100),
+		TE VARCHAR(80),
+		Titullo VARCHAR(100),
+		InstitucionEstudio VARCHAR(100)
+	);
+	-- e
+	CREATE TABLE PROFESORESMATERIAS(
+		LegajoProf int not null FOREIGN KEY REFERENCES PROFESORES(LegajoProf),
+		NroMateria INT not null FOREIGN KEY REFERENCES MATERIAS(NroMateria),
+		PRIMARY KEY (LegajoProf, NroMateria)
+	);
+	-- f 
+	CREATE TABLE ALUMNOSMATERIAS(
+		LegajoALum int not null,
+		NroMateria int not null
+	);
+	-- g
+	CREATE TABLE LOCALIDADES(
+		CodLocalidad VARCHAR(6) not null PRIMARY KEY,
+		Localidad VARCHAR(100) not null,
+		Provincia VARCHAR(100)
+	);
+	-- h
+	ALTER TABLE ALUMNOS DROP COLUMN Localidad;
+	ALTER TABLE ALUMNOS ADD CodLocalidad VARCHAR(6) FOREIGN KEY REFERENCES LOCALIDADES(CodLocalidad);
+	-- i
+	ALTER TABLE PROFESORES DROP COLUMN Localidad;
+	ALTER TABLE PROFESORES ADD CodLocalidad VARCHAR(6) FOREIGN KEY REFERENCES LOCALIDADES(CodLocalidad);
+	-- j
+	CREATE TABLE CARRERAS(
+		CodCarrera VARCHAR(8) PRIMARY KEY,
+		NomCarrera VARCHAR(100),
+		AniosDuracion decimal
+	);
+	-- k
+	ALTER TABLE MATERIAS DROP COLUMN NomCarera;
+	ALTER TABLE MATERIAS ADD CodCarrera VARCHAR(8) FOREIGN KEY REFERENCES CARRERAS(CodCarrera);
+	ALTER TABLE MATERIAS ADD TipoDuracion VARCHAR (13) CHECK (TipoDuracion in ('Cuatrimestral', 'Anual'));
+	-- l
+	DROP TABLE ALUMNOSMATERIAS;
+	-- m
+	CREATE TABLE ALUMNOSMATERIAS(
+		CalifFinal decimal,
+		AnioCursada int not null,
+		LegajoAlum int FOREIGN KEY REFERENCES ALUMNOS(LegajoAlum),
+		NroMateria INT FOREIGN KEY REFERENCES MATERIAS(NroMateria)
+		PRIMARY KEY(AnioCursada, LegajoAlum, NroMateria)
+	);
+	-- n [ Revisar ]
+	CREATE VIEW MateriasPorProfesor as
+	SELECT p.NomProf, p.ApellidoProf, m.NomCarrera
+	FROM PROFESORESMATERIAS pm
+	JOIN PROFESORES p ON p.LegajoProf = pm.LegajoProf
+	JOIN MATERIAS m ON m.NroMateria = pm.NroMateria
+	ORDER BY p.NomProf, p.ApellidoProf, m.NomCarrera DESC;
+	-- o

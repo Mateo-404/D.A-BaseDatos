@@ -1,4 +1,8 @@
 USE DA_BD;
+<<<<<<< HEAD
+=======
+
+>>>>>>> 9621c8e3ff1925d41310c3e9e406018866d27272
 -- TP 1
 -- <-- HOTELES -->
 -- Consultas Simples
@@ -69,6 +73,7 @@ USE DA_BD;
   JOIN booking ON room.roomno = booking.roomno
   JOIN hotel ON hotel.hotelno = booking.hotelno
   GROUP BY hotel.hotelno;
+<<<<<<< HEAD
   -- q
 	SELECT roomno, HOTEL.hotelname 
 	FROM ROOM, HOTEL 
@@ -279,3 +284,18 @@ entre los años 2013 y 2015 (ambos inclusive) y que no correspondan a la sección 
 	GROUP BY u.Nombre, ns.IdSeccion
 	HAVING COUNT(u.Nombre) > 2; 
 	-- v
+=======
+  -- u
+  SELECT MIN(r.price) AS MINIMO, MAX(r.price) AS MAXIMO, h.hotelno
+  FROM ROOM r
+  JOIN HOTEL h ON h.hotelno = r.hotelno
+  WHERE h.hotelname = 'London Park'
+  GROUP BY h.hotelno;
+  -- v
+  SELECT h.hotelname, AVG(r.price), r.type
+  FROM HOTEL h JOIN ROOM r ON h.hotelno = r.hotelno
+  WHERE h.city = 'London'
+  GROUP BY h.hotelname, r.type
+  ORDER BY h.hotelname, r.type; 
+
+>>>>>>> 9621c8e3ff1925d41310c3e9e406018866d27272
